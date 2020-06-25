@@ -1,5 +1,18 @@
 var issueContainerEl = document.querySelector("#issues-container");
+var limitWarningEl = document.querySelector("#limit-warning");
 
+
+var displayWarning = function(repo) {
+    //add warning to limitWariningEl 
+    limitWarningEl.textContent = "To see more than 30 repos ";
+
+    var linkEl = document.createElement("a");
+    linkEl.textContent = "go to Github.com";
+    linkEl.setAttribute("href", "https://github.com/" + repo + "/issues");
+    linkEl.setAttribute("target", "_blank");
+
+    limitWarningEl.appendChild(linkEl);
+};
 
 
 var getRepoIssues = function (repo) {
@@ -12,6 +25,10 @@ var getRepoIssues = function (repo) {
           response.json().then(function(data) {
             // pass response data to dom function
             displayIssues(data);
+
+            if (response.headers.get('link')) {
+                displayWarning(repo);
+            }
           });
         }
         else {
