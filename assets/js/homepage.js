@@ -26,6 +26,12 @@ var displayRepos = function (repos, searchTerm) {
     repoContainerEl.textContent = ""; 
     repoSearchTerm.textContent =  searchTerm;
 
+    // check to see if there are any repos
+    if (postMessage.length === 0) {
+        repoContainerEl.textContent = "No Repositories Found";
+        return;
+    }
+
     // loop over repos
     for (var i = 0; i < repos.length; i++) {
         // format repo name 
@@ -70,9 +76,18 @@ var getUserRepos = function (user) {
 
     // make a request to the URL
     fetch(apiUrl).then(function(response) {
-        response.json().then(function(data){
-            displayRepos(data, user);
-        });
+        // request was successful 
+        if (response.ok) {
+            response.json().then(function(data) {
+                displayRepos(data, user);
+            });
+        }
+        else {
+            alert("Error: " + response.statusText);
+        }
+    })
+    .catch(function(error) {
+        alert("Unable to connect to Github");
     });
 };
 
